@@ -7,57 +7,78 @@ import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-private  int counter=100;
-private  boolean running=false;
-private boolean wasRunning=false;
-private  static  final String CURRENT_COUNTER="counter";
-
+    private static final String CURRENT_COUNTER = "counter";
+    private int counter = 100;
+    private boolean running = false;
+    private boolean wasRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(savedInstanceState!=null){
-        counter=savedInstanceState.getInt(CURRENT_COUNTER);
+        if (savedInstanceState != null) {
+            counter = savedInstanceState.getInt(CURRENT_COUNTER);
         }
-      running=true;
         countDown();
     }
-@Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
-     super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putInt(CURRENT_COUNTER,counter);
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt(CURRENT_COUNTER, counter);
 
     }
 
 
-    private  void countDown(){
+    private void countDown() {
 
-        final TextView textView=findViewById(R.id.textView);
-       // textView.setText("hello");
-
-        final Handler handler=new Handler();
+        final Handler handler = new Handler();
 
         handler.post(new Runnable() {
+
+
             @Override
             public void run() {
-                //reset the counter
-
-                if(counter==0){
-                    counter=99;
+                final TextView textView = findViewById(R.id.textView);
+                if (counter == 0) {
+                    counter = 99;
                 }
+              if(running){
+               counter--;
+          }
                 textView.setText(Integer.toString(counter));
-                counter--;
-                handler.postDelayed(this,1000);
+                handler.postDelayed(this, 1000);
             }
+
         });
 
     }
-    @Override
-    public void onStop(){
-        super.onStop();
-        wasRunning=true;
+   protected  void  startCounter(View view){
+        running=true;
+   }
 
+   protected  void stopCountdown(View view){
+        running=false;
+   }
+    @Override
+    public void onPause(){
+        super.onPause();
+    }
+
+
+
+
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        running=true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        running = false;
 
     }
 }
